@@ -12,5 +12,9 @@
   },
   "author": "",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/alir128/summer-project-collab#readme"
+  "homepage": "https://bitbucket.org/alir128/summer-project-collab#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.2.7"
+  }
 }
