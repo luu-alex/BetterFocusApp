@@ -66,16 +66,27 @@ app.get("/stats", async (request, response) => {
 
 //need to create user auth
 
-const UserModel = Mongoose.model("user", {
-  firstName: String,
-  lastName: String
+// we use camelCase for variables
+const UserModel = Mongoose.model("User", {
+  name: String,
+  userID: Number,
+  email: String,
+  password: String,
+  created: Date,
+  points:
 });
 
-const TaskModel = Mongoose.model("user", {
-  Task: String,
-  User: String
+const TaskModel = Mongoose.model("Task", {
+  task: String,
+  userID: Number,
+  isItDone: Boolean
 });
 
+const ToDoModel = Mongoose.model("ToDo", {
+  isItDone: Boolean,
+  userID: Number,
+  deadLine: Date
+})
 
 app.post("/addUser", async (request, response) => {
   try {
