@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser= require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
-const Mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const models = require('./models');
 
 const app = express();
@@ -70,19 +70,6 @@ app.get("/stats", async (request, response) => {
 
 // we use camelCase for variables
 
-
-const TaskModel = Mongoose.model("Task", {
-    task: String,
-    userID: Number,
-    isItDone: Boolean
-});
-
-const ToDoModel = Mongoose.model("ToDo", {
-    isItDone: Boolean,
-    userID: Number,
-    deadLine: Date
-})
-
 app.post("/addUser", async (request, response) => {
     try {
         var user = new UserModel(request.body);
@@ -129,7 +116,7 @@ app.post('/addStoreItem', (req, res) => {
 })
 
 
-Mongoose.connect("mongodb+srv://project:summercollab@cluster0-6bcse.mongodb.net/SummerProject");
-app.listen(3000, () => {
+mongoose.connect("mongodb+srv://project:summercollab@cluster0-6bcse.mongodb.net/SummerProject");
+app.listen(3000, (port) => {
   console.log('listening on ${port}!')
 })
