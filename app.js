@@ -5,7 +5,7 @@ const Mongoose = require("mongoose");
 const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use(express.static(__dirname+"/public"));
+app.use(express.static("public"));
 const port = 3000;
 var db;
 
@@ -15,7 +15,7 @@ app.get('/', (req, res) =>
 );
 
 app.get('/index', (req, res) =>
-  res.sendFile(__dirname+'/public/index.html')
+  res.send('index.html')
 );
 
 app.get("/users", async (request, response) => {
@@ -73,7 +73,7 @@ const UserModel = Mongoose.model("User", {
   email: String,
   password: String,
   created: Date,
-  points:
+  points: Number
 });
 
 const TaskModel = Mongoose.model("Task", {
