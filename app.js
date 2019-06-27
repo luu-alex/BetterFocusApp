@@ -7,7 +7,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static("public"));
 const port = 3000;
-var db;
+
+var db = Mongoose.connect("mongodb+srv://project:summercollab@cluster0-6bcse.mongodb.net/SummerProject");
+
+
+
 
 //example get request
 app.get('/', (req, res) =>
@@ -134,7 +138,16 @@ app.post('/addStoreItem', (req, res) => {
 })
 
 
-Mongoose.connect("mongodb+srv://project:summercollab@cluster0-6bcse.mongodb.net/SummerProject");
+
+require("./api.js")(app, db);
+
+app.get("*", function(req,res) {
+  res.status(400);
+  res.json({status:404, "message": "Location not found."});
+})
+
 app.listen(3000, () => {
   console.log('listening on ${port}!')
 })
+
+
