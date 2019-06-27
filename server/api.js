@@ -1,6 +1,6 @@
 module.exports = function(app, db, models) {
 
-    var urlPrefix = "/api/";
+    var urlPrefix = "/api";
     //example get request
     app.get(urlPrefix + '/', (req, res) =>
         res.send('Hello World!')

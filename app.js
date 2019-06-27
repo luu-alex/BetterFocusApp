@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 const port = 3000;
 
-var db = Mongoose.connect("mongodb+srv://project:summercollab@cluster0-6bcse.mongodb.net/SummerProject");
+var db = mongoose.connect("mongodb+srv://project:summercollab@cluster0-6bcse.mongodb.net/SummerProject");
 
 
 
@@ -22,7 +22,7 @@ var db = Mongoose.connect("mongodb+srv://project:summercollab@cluster0-6bcse.mon
 
 // we use camelCase for variables
 
-require("./api.js")(app, db, models);
+require("./server/api.js")(app, db, models);
 
 app.get("*", function(req,res) {
     res.status(400);
