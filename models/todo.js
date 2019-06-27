@@ -3,7 +3,13 @@ var Schema = mongoose.Schema;
 
 const toDoModel = new Schema({
     isItDone: Boolean,
-    userID: Number,
+    user: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        username: String
+    },
     deadLine: Date
 });
 

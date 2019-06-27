@@ -3,7 +3,13 @@ var Schema = mongoose.Schema;
 
 const taskModel =  new Schema({
     task: String,
-    userID: Number,
+    user: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        username: String
+    },
     isItDone: Boolean
 });
 
