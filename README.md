@@ -2,7 +2,7 @@
 
 ## OUR IDEA
 ## Idea: productivity(?)
-### Description: Has a timer functionality, trello board, scheduling/day planning
+### Description: Has a timer functionality, trello board, scheduling/day planning, follows pomodoro technique
 
 ### Features: 
 habits for users, goals, charts, useful and fun information, reminders, Friend functionality(?), permission acceptance, we’ll have a shop page that people can buy with our digital currency,Set up reminders
