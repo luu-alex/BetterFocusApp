@@ -2,7 +2,6 @@ module.exports = function(app, db, models, mongoose) {
 
     var urlPrefix = "/api";
     var UserModel = mongoose.model('User');
-    UserModel = models.User;
     //example get request
     app.get(urlPrefix + '/', (req, res) =>
         res.send('Hello World!')
@@ -12,7 +11,7 @@ module.exports = function(app, db, models, mongoose) {
 
     app.get(urlPrefix + "/users", async (request, response) => {
         try {
-            var result = await  models.User().find().exec();
+            var result = await  UserModel.find().exec();
             response.send(result);
         } catch (error) {
             response.status(500).send(error);
@@ -81,6 +80,7 @@ module.exports = function(app, db, models, mongoose) {
             var result = await user.save();
             response.send(result);
         } catch (error) {
+            console.log(error)
             response.status(500).send(error);
         }
     });
