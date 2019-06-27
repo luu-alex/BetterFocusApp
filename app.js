@@ -22,12 +22,16 @@ var db = mongoose.connect("mongodb+srv://project:summercollab@cluster0-6bcse.mon
 
 // we use camelCase for variables
 
-require("./server/api.js")(app, db, models);
+require("./server/api.js")(app, db, models, mongoose);
 
 app.get("*", function(req,res) {
     res.status(400);
     res.json({status:404, "message": "Location not found."});
 })
+
+app.get('/index', (req, res) =>
+        res.send('index.html')
+    );
 
 app.listen(3000, () => {
     console.log('listening on ${port}!')
