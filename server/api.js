@@ -12,7 +12,7 @@ module.exports = function(app, db, models, mongoose) {
     );
     // returns all users in db
     // Need to add authentication
-    app.get(urlPrefix + "/users", async (request, response) => { // should return maybe only usernames in future to add as connections....
+    app.get(urlPrefix + "users", async (request, response) => { // should return maybe only usernames in future to add as connections....
         try {
             var result = await  UserModel.find().exec();
             response.send(result);
@@ -26,10 +26,16 @@ module.exports = function(app, db, models, mongoose) {
 
     // add new user
     // authenticate user and take them inside the app
-    app.post(urlPrefix + "addUser", async (request, response) => {
+    app.post(urlPrefix + "addUser", async (request, response) => { //tested already
         try {
-            var user = new UserModel(request.body);
-            var result = await user.save();
+            const user = await UserModel.findOne({'username': request.body.username});
+            if (user) {
+                response.status(404);
+                response.json({status:404, "message": "User with username already exists"});
+                return
+            }
+            let newuser = UserModel(request.body);
+            var result = await newuser.save();
             response.send(result);
         } catch (error) {
             console.log(error)
@@ -37,12 +43,18 @@ module.exports = function(app, db, models, mongoose) {
         }
     });
 
-    // used to query one used by userID.
+    // used to query one used by username.
     // Need to add authentication
-    app.get(urlPrefix + "user/:userID", async (request, response) => { //eventually return users personal profile
+    app.get(urlPrefix + "user/:username", async (request, response) => { //eventually return users personal profile //tested already
         try {
-            var result = await  UserModel.find({ 'username': request.params.username}).exec();
-            response.send(result);
+            const user = await UserModel.findOne({'username': request.params.username});
+            if (!user) {
+                response.status(404);
+                response.json({status:404, "message": `User with ${request.params.username} doesn't exists`});
+                return
+            }
+            response.send(user);
+            
         } catch (error) {
             response.status(500).send(error);
         }
@@ -76,9 +88,15 @@ module.exports = function(app, db, models, mongoose) {
 
     // return users all todos
     // Need to add authentication
-    app.get(urlPrefix + "todo/:username", async (request, response) => {
+    app.get(urlPrefix + "todo/all/:username", async (request, response) => { //tested already
         try {
-            var result = await  TodoModel.find({ 'username': request.params.username}).exec();
+            const user = await UserModel.findOne({'username': request.params.username});
+            if (!user) {
+                response.status(404);
+                response.json({status:404, "message": `User with ${request.params.username} doesn't exists`});
+                return
+            }
+            var result = await TodoModel.find({'_id' :{ $in: user.todos}});
             response.send(result);
         } catch (error) {
             response.status(500).send(error);
@@ -87,9 +105,9 @@ module.exports = function(app, db, models, mongoose) {
 
     // return users one tasks
     // Need to add authentication
-    app.get(urlPrefix + "todo/:id", async (request, response) => {
+    app.get(urlPrefix + "todo/:id", async (request, response) => { //tested already
         try {
-            var result = await  TaskModel.findById(request.params.id).exec();
+            var result = await  TodoModel.findById(request.params.id);
             response.send(result);
         } catch (error) {
             response.status(500).send(error);
@@ -98,11 +116,23 @@ module.exports = function(app, db, models, mongoose) {
 
     // add new user
     // authenticate user and take them inside the app
-    app.post(urlPrefix + "addTodo/:username", async (request, response) => {
+    app.post(urlPrefix + "addTodo", async (request, response) => { // tested already
         try {
             var todo = new TodoModel(request.body);
-            todo.user = request.params.username;
+            // task.user = request.params.username; // need to fix add users id once auth is added
+            var username = request.body.username;
+            console.log(request.body.deadLine)
+            var user = await UserModel.findOne({username});
+            if (!user) {
+                const error = new this.errs.NotFoundError(
+                    `User with username - ${username} does not exists`
+                );
+                return response.status(500).send(error);
+            }
+            todo.user = user._id;
             var result = await todo.save();
+            user.todos.push(result._id);
+            await user.save();
             response.send(result);
         } catch (error) {
             console.log(error)
@@ -112,7 +142,7 @@ module.exports = function(app, db, models, mongoose) {
 
     // edit user todo. 
     // Need to add authentication
-    app.put(urlPrefix + "todo/:id/edit", async (request, response) => {
+    app.put(urlPrefix + "todo/edit/:id", async (request, response) => {
         try {
             var todo = await TodoModel.findById(request.params.id).exec();
             todo.set(request.body);
@@ -125,11 +155,28 @@ module.exports = function(app, db, models, mongoose) {
 
     // delete users todo from db
     // Need to add authentication
-    app.delete(urlPrefix + "todo/:id/delete", async (request, response) => {
+    app.delete(urlPrefix + "todo/delete/:id", async (request, response) => { // tested already with postman
         try {
+            var todo = await TodoModel.findById(request.params.id).exec();
+            if (!todo) {
+                const error = new this.errs.NotFoundError(
+                    `todo with id - ${request.params.id} does not exists`
+                );
+                return response.status(500).send(error);
+            }
+            var user = await UserModel.findOne(todo.user);
+            if (!user) {
+                const error = new this.errs.NotFoundError(
+                    `User with username - ${username} does not exists`
+                );
+                return response.status(500).send(error);
+            }
+            user.todos.pop(request.params.id);
             var result = await TodoModel.deleteOne({ _id: request.params.id }).exec();
+            await user.save();
             response.send(result);
         } catch (error) {
+            console.log(error)
             response.status(500).send(error);
         }
     });
@@ -139,9 +186,15 @@ module.exports = function(app, db, models, mongoose) {
 
     // return users all tasks
     // Need to add authentication
-    app.get(urlPrefix + "task/:username", async (request, response) => {
+    app.get(urlPrefix + "task/all/:username", async (request, response) => { //tested already
         try {
-            var result = await  TaskModel.find({ 'username': request.params.username}).exec();
+            const user = await UserModel.findOne({'username': request.params.username});
+            if (!user) {
+                response.status(404);
+                response.json({status:404, "message": `Username ${request.params.username} doesn\'t exists`});
+                return
+            }
+            var result = await TaskModel.find({'_id' :{ $in: user.tasks}});
             response.send(result);
         } catch (error) {
             response.status(500).send(error);
@@ -150,7 +203,7 @@ module.exports = function(app, db, models, mongoose) {
 
     // return users one tasks
     // Need to add authentication
-    app.get(urlPrefix + "task/:id", async (request, response) => {
+    app.get(urlPrefix + "task/:id", async (request, response) => { // tested already
         try {
             var result = await  TaskModel.findById(request.params.id).exec();
             response.send(result);
@@ -161,11 +214,22 @@ module.exports = function(app, db, models, mongoose) {
 
     // add new task
     // authenticate user and take them inside the app
-    app.post(urlPrefix + "addTask/:username", async (request, response) => {
+    app.post(urlPrefix + "addTask", async (request, response) => { // tested already
         try {
-            var todo = new TaskModel(request.body);
-            task.user = request.params.username;
-            var result = await todo.save();
+            var task = new TaskModel(request.body);
+            // task.user = request.params.username; // need to fix add users id once auth is added
+            var username = request.body.username;
+            var user = await UserModel.findOne({'username': username});
+            if (!user) {
+                const error = new this.errs.NotFoundError(
+                    `User with username - ${username} does not exists`
+                );
+                return response.status(500).send(error);
+            }
+            task.user = user._id;
+            var result = await task.save();
+            user.tasks.push(result._id);
+            await user.save();
             response.send(result);
         } catch (error) {
             console.log(error)
@@ -175,8 +239,9 @@ module.exports = function(app, db, models, mongoose) {
 
     // edit user task.
     // Need to add authentication
-    app.put(urlPrefix + "task/:id/edit", async (request, response) => {
+    app.put(urlPrefix + "task/edit/:id", async (request, response) => {
         try {
+            console.log(request.body)
             var task = await TaskModel.findById(request.params.id).exec();
             task.set(request.body);
             var result = await task.save();
@@ -188,9 +253,19 @@ module.exports = function(app, db, models, mongoose) {
     
     // delete users todo from db
     // Need to add authentication
-    app.delete(urlPrefix + "task/:id/delete", async (request, response) => {
+    app.delete(urlPrefix + "task/delete/:id", async (request, response) => { // tested with POSTMAN complete.
         try {
-            var result = await TodoModel.deleteOne({ _id: request.params.id }).exec();
+            var task = await TaskModel.findById(request.params.id).exec();
+            var user = await UserModel.findOne({_id: task.user});
+            if (!user) {
+                const error = new this.errs.NotFoundError(
+                    `User with username - ${username} does not exists`
+                );
+                return response.status(500).send(error);
+            }
+            user.tasks.pop(request.params.id);
+            var result = await TaskModel.deleteOne({ _id: request.params.id }).exec();
+            await user.save();
             response.send(result);
         } catch (error) {
             response.status(500).send(error);

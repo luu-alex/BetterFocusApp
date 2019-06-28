@@ -2,15 +2,17 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 const toDoModel = new Schema({
-    isItDone: Boolean,
-    user: {
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        },
-        username: String
+    todo: String,
+    isItDone: {
+        type: Boolean,
+        default: false
     },
-    deadLine: Date
+    user: { type: mongoose.Schema.ObjectId, ref: 'User' },
+    deadLine: {
+        type: Date,
+        min: Date.now,
+        max: '2099-12-31'
+    }
 });
 
 var ToDo = mongoose.model('Todo', toDoModel);

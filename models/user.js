@@ -8,7 +8,13 @@ const userModel = new Schema({
     email: String,
     password: String,
     created: { type: Date, default: Date.now },
-    points: Number
+    points: Number,
+    tasks: [
+        { type: mongoose.Schema.ObjectId, ref: 'Task' }
+    ],
+    todos: [
+        { type: mongoose.Schema.ObjectId, ref: 'Todo' }
+    ]
 });
 
 var User = mongoose.model('User', userModel);
