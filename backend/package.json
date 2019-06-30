@@ -1,0 +1,25 @@
+{
+  "name": "summer-project-collab",
+  "version": "1.0.0",
+  "description": "habits for users, goals, charts, useful and fun information, reminders, Friend functionality(?), permission acceptance, we’ll have a shop page that people can buy with our digital currency,Set up reminders",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://luualex@bitbucket.org/alir128/summer-project-collab.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/alir128/summer-project-collab#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.2.7",
+    "mongoose": "^5.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
