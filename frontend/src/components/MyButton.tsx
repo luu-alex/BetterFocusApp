@@ -6,7 +6,7 @@ class MyButton extends Component {
         return (
             <View>
                 <Button
-                    title="Press me"
+                    title="LOL"
                 />
             </View>
         )
