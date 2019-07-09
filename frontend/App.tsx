@@ -1,13 +1,12 @@
 import React, { Component} from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import MyButton from './src/components/MyButton.tsx';
+import ClockContainer from './src/components/clockScreen/ClockContainer';
 
 export default class App extends Component {
   render() {
     return (
         <View style={styles.container}>
-          <Text> working on your!</Text>
-          <MyButton />
+          <ClockContainer/>
         </View>
         );
     }
