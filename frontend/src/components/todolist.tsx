@@ -6,7 +6,7 @@ export default class FlatListBasics extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={ this.props.data }
+          data={this.props.data }
           renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
         />
       </View>

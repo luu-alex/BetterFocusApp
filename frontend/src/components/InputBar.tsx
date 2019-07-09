@@ -3,10 +3,22 @@ import { View, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
 export default class todoInput extends React.Component {
-  state = {
-    text: ''
-  };
+    constructor(props) {
+        super(props);
+        this.state = {
+          text: '',
+        }
+      }
 
+      onAddItem = () => {
+        this.props.handler(this.state.text);
+        this.setState(state => {
+          return {
+            text: '',
+          };
+        });
+        
+      };
   render(){
     return (
     <View>
@@ -17,6 +29,7 @@ export default class todoInput extends React.Component {
         placeholder={this.props.placeholder}
         value={this.state.text}
         onChangeText={text => this.setState({ text })}
+        onSubmitEditing={text => this.onAddItem(text)}
       />
     </View>
       
