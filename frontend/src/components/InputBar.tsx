@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Colors, TextInput } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 
 export default class todoInput extends React.Component {
   state = {
@@ -13,8 +13,8 @@ export default class todoInput extends React.Component {
         <TextInput 
         mode="outlined"
         style={styles.inputContainerStyle}
-        label='To Do'
-        placeholder="Enter new To Do"
+        label={this.props.label}
+        placeholder={this.props.placeholder}
         value={this.state.text}
         onChangeText={text => this.setState({ text })}
       />
