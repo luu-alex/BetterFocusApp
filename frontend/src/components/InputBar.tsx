@@ -11,7 +11,7 @@ export default class todoInput extends React.Component {
     return (
     <View>
         <TextInput 
-        mode="outlined"
+        mode="Flat input"
         style={styles.inputContainerStyle}
         label={this.props.label}
         placeholder={this.props.placeholder}
@@ -27,12 +27,15 @@ export default class todoInput extends React.Component {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      padding: 8,
+      padding: 5,
     },
     wrapper: {
       flex: 1,
     },
     inputContainerStyle: {
-      margin: 8,
+      margin: 0,
+      paddingVertical: 0,
+      padding: 0,
+      backgroundColor: '#4c669f'
     },
   });

@@ -5,21 +5,32 @@ import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Provider as PaperProvider } from 'react-native-paper';
 import AppBar from './AppBar'
+import Todoslist from './todolist'
 
 export default class Todo extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { data: [
+            {key: 'Ali'},
+            
+          ]
+        };
+      }
     static navigationOptions = {
         tabBarIcon: tabBarIcon('note-add'),
       };
     render() {
         const { navigate } = this.props.navigation;
+        
         return (
             <PaperProvider>
                 <AppBar title="Reminders" />
                 <TodoInput label="To Do" placeholder="Enter new To Do"/>
                 <LinearGradient style={styles.container} colors={['#4c669f', '#3b5998', '#192f6a']}>
             
-                    <Text style={styles.text}>To dos</Text>
+                <Todoslist data={this.state.data}/>
                 </LinearGradient>
+                
                 
             </PaperProvider>        
         );
@@ -28,14 +39,14 @@ export default class Todo extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'center',
-        alignItems: 'center',
+        // justifyContent: 'center',
+        // alignItems: 'center',
         flex: 1,
         padding: 8,
     },
     text: {
         fontSize: 36,
-        textAlign: 'center',
+        // textAlign: 'center',
         fontWeight: 'bold',
         color: 'white',
     },
