@@ -17,6 +17,8 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-material-bottom-navigation": "^1.0.4",
     "react-native-paper": "^2.16.0",
+    "react-native-swipe-list-view": "^1.5.8",
+    "react-native-swipeable-flat-list": "^0.1.1",
     "react-native-web": "^0.11.4",
     "react-navigation": "^3.11.0",
     "react-navigation-material-bottom-tabs": "^1.0.0"

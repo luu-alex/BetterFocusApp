@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button, TouchableOpacityBase } from 'react-nati
 import TodoInput from './InputBar';
 import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider, Snackbar } from 'react-native-paper';
 import AppBar from './AppBar'
 import Todoslist from './todolist'
 
@@ -16,6 +16,7 @@ export default class Todo extends React.Component {
         this.state = { data: [
           ],
           isFetching: false,
+          visible: false
         };
       }
 
@@ -30,7 +31,7 @@ export default class Todo extends React.Component {
                  .then(res => {
                     // console.log(res.data)
                     this.setState(state => {
-                        const data= [...state.data, {key : res.data.todo}];
+                        const data= [...state.data, res.data];
                         return {
                             data
                         };
@@ -43,8 +44,8 @@ export default class Todo extends React.Component {
           .then(res => {
             const notCompleteTodos = res.data;
             const newData = notCompleteTodos
-                .filter(todo => !todo.isItDone)
-                .map(notcomp => ({ key: notcomp.todo}));
+                .filter(todo => !todo.isItDone);
+                // .map(notcomp => ({ key: notcomp.todo}));
             this.setState(state => {
                 return{
                     data: newData,
@@ -53,6 +54,15 @@ export default class Todo extends React.Component {
             })
           })
       }
+
+    deleteHandler = (item_id) => {
+        API.delete('todo/delete/'+item_id)
+            .then(res => {
+                this.onRefresh();
+                this.setState(state => ({ visible: !state.visible }))
+            })
+        
+    }
 
     onRefresh = () => {
         this.setState({ isFetching: true }, function() { this.refreshTodos() });
@@ -63,8 +73,8 @@ export default class Todo extends React.Component {
         .then(res => {
           const notCompleteTodos = res.data;
           const newData = notCompleteTodos
-              .filter(todo => !todo.isItDone)
-              .map(notcomp => ({ key: notcomp.todo}));
+              .filter(todo => !todo.isItDone);
+            //   .map(notcomp => ({ key: notcomp.todo}));
           this.setState(state => {
               return{
                   data: newData,
@@ -87,9 +97,22 @@ export default class Todo extends React.Component {
                 <TodoInput label="To Do" placeholder="Enter new To Do" handler={this.handler} />
                 <LinearGradient style={styles.container} colors={['#4c669f', '#3b5998', '#192f6a']}>
 
-                <Todoslist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} />
-                </LinearGradient>
+                <Todoslist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} delete={this.deleteHandler} />
                 
+                </LinearGradient>
+                <Snackbar
+                    visible={this.state.visible}
+                    onDismiss={() => this.setState({ visible: false })}
+                    action={{
+                        label: 'Dismiss',
+                        onPress: () => {
+                            this.setState({ visible: false })
+                        },
+                    }}
+                    duration={Snackbar.DURATION_SHORT}
+                    >
+                    Todo Deleted
+                </Snackbar>
                 
             </PaperProvider>        
         );
