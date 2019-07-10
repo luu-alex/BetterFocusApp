@@ -7,38 +7,73 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import AppBar from './AppBar'
 import Todoslist from './todolist'
 
+import API from '../api'
+
+
 export default class Todo extends React.Component {
     constructor(props) {
         super(props);
         this.state = { data: [
           ],
-          
+          isFetching: false,
         };
       }
 
-      onAddItem = () => {
-        //   console.log(this.props.data.data)
-        this.setState(state => {
-          const dataList = [...state.dataList, {key : state.text}];
-    
-          return {
-            dataList,
-            text: '',
-          };
-        }, () => this.props.data.handler(this.state.dataList));
-        
-      };
-
       handler = (text) => {
-        this.setState(state => {
-            const data= [...state.data, {key : text}];
-      
-            return {
-              data
-            };
-          });
+        let data = {
+            todo: text,
+            username: "alir128",
+            deadLine: "2019-07-12T02:01:00.000Z"
+        }
+
+        return API.post('addTodo', data)
+                 .then(res => {
+                    // console.log(res.data)
+                    this.setState(state => {
+                        const data= [...state.data, {key : res.data.todo}];
+                        return {
+                            data
+                        };
+                    });
+                 })
       };
 
+      componentDidMount() {
+        API.get(`todo/all/alir128`)
+          .then(res => {
+            const notCompleteTodos = res.data;
+            const newData = notCompleteTodos
+                .filter(todo => !todo.isItDone)
+                .map(notcomp => ({ key: notcomp.todo}));
+            this.setState(state => {
+                return{
+                    data: newData,
+                    isFetching: false
+                }
+            })
+          })
+      }
+
+    onRefresh = () => {
+        this.setState({ isFetching: true }, function() { this.refreshTodos() });
+     }
+
+     refreshTodos = () => {   
+        API.get(`todo/all/alir128`)
+        .then(res => {
+          const notCompleteTodos = res.data;
+          const newData = notCompleteTodos
+              .filter(todo => !todo.isItDone)
+              .map(notcomp => ({ key: notcomp.todo}));
+          this.setState(state => {
+              return{
+                  data: newData,
+                  isFetching: false
+              }
+          })
+        })
+
+    }
     
     static navigationOptions = {
         tabBarIcon: tabBarIcon('note-add'),
@@ -52,7 +87,7 @@ export default class Todo extends React.Component {
                 <TodoInput label="To Do" placeholder="Enter new To Do" handler={this.handler} />
                 <LinearGradient style={styles.container} colors={['#4c669f', '#3b5998', '#192f6a']}>
 
-                <Todoslist data={this.state.data}/>
+                <Todoslist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} />
                 </LinearGradient>
                 
                 

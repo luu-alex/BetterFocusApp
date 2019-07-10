@@ -7,6 +7,8 @@ export default class FlatListBasics extends Component {
       <View style={styles.container}>
         <FlatList
           data={this.props.data }
+          onRefresh={() => this.props.onRefresh()} 
+          refreshing={ this.props.isFetch }
           renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
         />
       </View>
