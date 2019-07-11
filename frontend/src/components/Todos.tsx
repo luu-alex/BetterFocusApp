@@ -16,7 +16,9 @@ export default class Todo extends React.Component {
         this.state = { data: [
           ],
           isFetching: false,
-          visible: false
+          visible: false,
+          visible1: false,
+          message:''
         };
       }
 
@@ -59,13 +61,29 @@ export default class Todo extends React.Component {
         API.delete('todo/delete/'+item_id)
             .then(res => {
                 this.onRefresh();
-                this.setState(state => ({ visible: !state.visible }))
+                this.setState(state => ({ visible: !state.visible, message: 'deleted successfully' }))
             })
         
     }
 
+    editHandler = (item_id, text) => {
+        let data = {
+            todo: text,
+            username: "alir128",
+            deadLine: "2019-07-12T02:01:00.000Z"
+        }
+
+        return API.put('todo/edit/'+item_id, data)
+                 .then(res => {
+                    // console.log(res.data)
+                    this.onRefresh();
+                    this.setState(state => ({ visible: !state.visible, message: 'edited successfully' }))
+                 })
+
+    }
+
     onRefresh = () => {
-        this.setState({ isFetching: true }, function() { this.refreshTodos() });
+        this.setState({ isFetching: true }, () => { this.refreshTodos() });
      }
 
      refreshTodos = () => {   
@@ -97,21 +115,21 @@ export default class Todo extends React.Component {
                 <TodoInput label="To Do" placeholder="Enter new To Do" handler={this.handler} />
                 <LinearGradient style={styles.container} colors={['#4c669f', '#3b5998', '#192f6a']}>
 
-                <Todoslist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} delete={this.deleteHandler} />
+                <Todoslist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} delete={this.deleteHandler}  edit={this.editHandler}/>
                 
                 </LinearGradient>
                 <Snackbar
                     visible={this.state.visible}
-                    onDismiss={() => this.setState({ visible: false })}
+                    onDismiss={() => this.setState({ visible: false, message: '' })}
                     action={{
                         label: 'Dismiss',
                         onPress: () => {
-                            this.setState({ visible: false })
+                            this.setState({ visible: false, message: '' })
                         },
                     }}
                     duration={Snackbar.DURATION_SHORT}
                     >
-                    Todo Deleted
+                    {this.state.message}
                 </Snackbar>
                 
             </PaperProvider>        
