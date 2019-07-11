@@ -1,13 +1,37 @@
 import React, { Component } from 'react';
-import { AppRegistry, FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+
+import { List, TouchableRipple, Divider } from 'react-native-paper';
 
 export default class FlatListBasics extends Component {
+    _keyExtractor = (item, index) => item._id;
   render() {
+      
     return (
       <View style={styles.container}>
         <FlatList
           data={this.props.data }
-          renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
+          onRefresh={() => this.props.onRefresh()} 
+          refreshing={ this.props.isFetch }
+          ItemSeparatorComponent={Divider}
+          keyExtractor={this._keyExtractor}
+          renderItem={({item}) =>
+          <TouchableRipple
+          style={styles.ripple}
+          onPress={() => {}}
+          rippleColor="rgba(0, 0, 0, .32)"
+        >
+          <List.Item
+            left={props => <List.Icon {...props} icon="event" />}
+            title={item.todo}
+            description={item.deadLine}
+            right={props => <TouchableOpacity onPress={() => this.props.delete(item._id)}>
+            <List.Icon  {...props} icon="cancel" />
+          </TouchableOpacity>}
+          />
+
+          </TouchableRipple>
+          }
         />
       </View>
     );
@@ -23,5 +47,8 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     height: 44,
+  },
+  ripple: {
+    flex: 1,
   },
 })
