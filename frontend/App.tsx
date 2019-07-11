@@ -1,22 +1,14 @@
-import React, { Component} from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import ClockContainer from './src/components/clockScreen/ClockContainer';
+import React from 'react';
+import { createAppContainer } from 'react-navigation';
+import { View } from 'react-native';
+import Navigator from './src/navigator';
 
-export default class App extends Component {
-  render() {
-    return (
-        <View style={styles.container}>
-          <ClockContainer/>
-        </View>
-        );
-    }
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const App = createAppContainer(Navigator);
+
+
+export default () => (
+  <View style={{ flex: 1, marginTop: 0 }}>
+    <App />
+  </View>
+);
