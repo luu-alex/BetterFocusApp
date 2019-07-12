@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Dimensions } from 'react-native';
 import ClockButton from './ClockButton';
 import { Button, Card, Text } from 'react-native-elements';
+import tabBarIcon from '../../tabBarIcon';
 
 class ClockContainer extends Component {
     state = {
@@ -39,6 +40,9 @@ class ClockContainer extends Component {
         })
     }
 
+    static navigationOptions = {
+        tabBarIcon: tabBarIcon('md-alarm'),
+      };
     render() {
         const {countingDown, timer} = this.state;
         const screenWidth = Math.round(Dimensions.get('window').width);

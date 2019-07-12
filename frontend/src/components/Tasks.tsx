@@ -14,7 +14,7 @@ import {
 
 export default class Todo extends React.Component {
     static navigationOptions = {
-        tabBarIcon: tabBarIcon('note-add'),
+        tabBarIcon: tabBarIcon('md-calendar'),
       };
     render() {
         const { navigate } = this.props.navigation;

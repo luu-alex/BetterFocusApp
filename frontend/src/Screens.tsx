@@ -41,7 +41,7 @@ export const Second = createScreen({
 });
 
 export const Third = createScreen({
-  icon: 'timer',
+  icon: 'md-stats',
   colors: ['#4c669f', '#3b5998', '#192f6a'],
   title: 'Screen 3',
 });
