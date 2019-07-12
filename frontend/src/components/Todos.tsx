@@ -26,7 +26,7 @@ export default class Todo extends React.Component {
         let data = {
             todo: text,
             username: "alir128",
-            deadLine: "2019-07-12T02:01:00.000Z"
+            deadLine: "2019-07-21T02:01:00.000Z"
         }
 
         return API.post('addTodo', data)
@@ -61,23 +61,24 @@ export default class Todo extends React.Component {
         API.delete('todo/delete/'+item_id)
             .then(res => {
                 this.onRefresh();
-                this.setState(state => ({ visible: !state.visible, message: 'deleted successfully' }))
+                this.setState(state => ({ visible: !state.visible, message: 'Deleted successfully' }))
             })
         
     }
 
-    editHandler = (item_id, text) => {
+    editHandler = (item_id, todo) => {
         let data = {
-            todo: text,
+            todo: todo.text,
             username: "alir128",
-            deadLine: "2019-07-12T02:01:00.000Z"
+            deadLine: todo.date
         }
+        // console.log(text)
 
         return API.put('todo/edit/'+item_id, data)
                  .then(res => {
                     // console.log(res.data)
                     this.onRefresh();
-                    this.setState(state => ({ visible: !state.visible, message: 'edited successfully' }))
+                    this.setState(state => ({ visible: !state.visible, message: 'Edited successfully' }))
                  })
 
     }

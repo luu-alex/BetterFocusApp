@@ -23,19 +23,19 @@ class DatePicker extends Component {
 
   handleChange = date => {
     this.handleClose();
-    this.setState({ date });
+    this.setState({ date }, ()=> this.props.dateHandler(this.state.date));
   };
 
   handleClose = () => {
     this.setState({ open: false }, this.handleBlur);
+    
   };
 
   handleOpen = () => {
     Keyboard.dismiss();
     this.handleFocus();
-    this.setState({ open: true });
+    this.setState({ open: true});
   };
-
   renderTouchText = props => {
     const { style, value } = props;
 
@@ -49,7 +49,6 @@ class DatePicker extends Component {
   render() {
     const { date, open } = this.state;
     const value = date ? date.toLocaleString() : '';
-
     return (
       <View style={{ flex: 1, justifyContent:'center' , backgroundColor: '#fff'}}>
         <TextInput
@@ -61,7 +60,8 @@ class DatePicker extends Component {
           
         />
         <DateTimePicker
-          date={date}
+          mode={"datetime"}
+          date={new Date(this.props.dateGiven)}
           isVisible={open}
           onConfirm={this.handleChange}
           onCancel={this.handleClose}
