@@ -33,8 +33,6 @@ app.get('/index', (req, res) =>
         res.send('index.html')
     );
 
-app.listen(3000, () => {
+app.listen(3000, '0.0.0.0', () => {
     console.log('listening on ${port}!')
 })
-
-

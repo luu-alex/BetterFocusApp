@@ -1,3 +1,4 @@
+var ObjectID = require('mongodb').ObjectID;
 module.exports = function(app, db, models, mongoose) {
 
     var urlPrefix = "/api/";
@@ -121,7 +122,7 @@ module.exports = function(app, db, models, mongoose) {
             var todo = new TodoModel(request.body);
             // task.user = request.params.username; // need to fix add users id once auth is added
             var username = request.body.username;
-            console.log(request.body.deadLine)
+            //  console.log(request.body.deadLine)
             var user = await UserModel.findOne({username});
             if (!user) {
                 const error = new this.errs.NotFoundError(
@@ -157,24 +158,33 @@ module.exports = function(app, db, models, mongoose) {
     // Need to add authentication
     app.delete(urlPrefix + "todo/delete/:id", async (request, response) => { // tested already with postman
         try {
-            var todo = await TodoModel.findById(request.params.id).exec();
+            const todo = await TodoModel.findById(request.params.id).exec();
             if (!todo) {
                 const error = new this.errs.NotFoundError(
                     `todo with id - ${request.params.id} does not exists`
                 );
                 return response.status(500).send(error);
             }
-            var user = await UserModel.findOne(todo.user);
+            let user = await UserModel.findOne(todo.user);
             if (!user) {
                 const error = new this.errs.NotFoundError(
                     `User with username - ${username} does not exists`
                 );
                 return response.status(500).send(error);
             }
-            user.todos.pop(request.params.id);
-            var result = await TodoModel.deleteOne({ _id: request.params.id }).exec();
-            await user.save();
-            response.send(result);
+	    console.log(user);
+            // user.todos.pop(request.params.id);
+	    console.log(user);
+            const _id = new ObjectID(request.params.id);
+            var result = await TodoModel.remove({ _id: _id }, (err, res) => {
+	        if(err) { console.log(err) } else { console.log(res)}
+            })
+            await UserModel.updateOne(
+ 		{ _id: new ObjectID(user._id) },
+  	        { $pull: { todos: { _id: _id  } } }
+	    , (err) => { if(err){ console.log(err)}});
+            // console.log(result);
+	    response.send(result);
         } catch (error) {
             console.log(error)
             response.status(500).send(error);

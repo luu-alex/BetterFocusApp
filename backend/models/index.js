@@ -1,3 +1,3 @@
-exports.User = require("./user.js");
-exports.Task = require("./task.js");
-exports.Todo= require("./todo.js");
+exports.User = require("./User.js");
+exports.Task = require("./Task.js");
+exports.Todo= require("./Todo.js");

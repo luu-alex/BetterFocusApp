@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-const toDoModel = new Schema({
+const TodoModel = new Schema({
     todo: String,
     isItDone: {
         type: Boolean,
@@ -15,8 +15,8 @@ const toDoModel = new Schema({
     }
 });
 
-var ToDo = mongoose.model('Todo', toDoModel);
+var Todo = mongoose.model('Todo', TodoModel, 'Todos');
 
 module.exports = {
-    ToDo: ToDo
+    Todo: Todo
 }

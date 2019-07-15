@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-const taskModel =  new Schema({
+const TaskModel =  new Schema({
     task: String,
     user: { type: mongoose.Schema.ObjectId, ref: 'User' },
     isItDone: {
@@ -10,7 +10,7 @@ const taskModel =  new Schema({
     }
 });
 
-var Task = mongoose.model('Task', taskModel);
+var Task = mongoose.model('Task', TaskModel, 'Tasks');
 
 module.exports = {
     Task: Task
