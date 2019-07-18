@@ -38,17 +38,17 @@ export default class Task extends React.Component {
                     this.setState(state => {
                         const data= [...state.data, res.data];
                         return {
-                            data
+                            data,
+                            NewDialogVisible: false
                         };
                     });
                 })
     };
 
     _deleteHandler = (item_id) => {
-        console.log(item_id)
+        // console.log(item_id)
         API.delete('task/delete/'+item_id)
             .then(res => {
-                
                 this.setState(state => ({ _SnackbarVisible: !state._SnackbarVisible, message: 'Deleted successfully' }), this._onRefresh())
             })
         
@@ -62,7 +62,6 @@ export default class Task extends React.Component {
         }
         return API.put('task/edit/'+item_id, data)
                  .then(res => {
-                    // console.log(res.data)
                     this._onRefresh();
                     this.setState(state => ({ _SnackbarVisible: !state._SnackbarVisible, message: 'Edited successfully' }))
                  })
@@ -75,7 +74,6 @@ export default class Task extends React.Component {
             const notCompleteTasks = res.data;
             const newData = notCompleteTasks
                 .filter(task => !task.isItDone);
-                // .map(notcomp => ({ key: notcomp.todo}));
             this.setState(state => {
                 return{
                     data: newData,
@@ -97,7 +95,6 @@ export default class Task extends React.Component {
           const newData = notCompleteTask
               .filter(task => !task.isItDone);
             //   .map(notcomp => ({ key: notcomp.todo}));
-            console.log(newData);
           this.setState(state => {
               return{
                   data: newData,
@@ -147,8 +144,6 @@ export default class Task extends React.Component {
 
   const styles = StyleSheet.create({
     container: {
-    //   justifyContent: 'center',
-    //   alignItems: 'center',
       flex: 1,
       padding: 8,
     },

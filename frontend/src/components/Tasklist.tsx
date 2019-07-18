@@ -27,19 +27,19 @@ export default class FlatListBasics extends Component {
           keyExtractor={this._keyExtractor}
           renderItem={({item}) =>
             <TouchableRipple
-            style={styles.ripple}
-            onPress={() => this.setState({ visible: true, pressedItem: item})}
-            rippleColor="rgba(0, 0, 0, .32)"
+                style={styles.ripple}
+                onPress={() => this.setState({ visible: true, pressedItem: item})}
+                rippleColor="rgba(0, 0, 0, .32)"
             >
-            <List.Item
-                left={props => <List.Icon {...props} icon="event" />}
-                title={item.task}
-                description={moment(item.deadLine).format('llll')}
-                right={props => <TouchableOpacity onPress={() => this.props.delete(item._id)}>
-                <List.Icon  {...props} icon="cancel" />
-            </TouchableOpacity>}
-            />
-          </TouchableRipple>
+                <List.Item
+                    left={props => <TouchableOpacity onPress={() => this.props.delete(item._id)}>
+                    <List.Icon  {...props} icon="cancel" />
+                </TouchableOpacity>}
+                    title={item.task}
+                    description={moment(item.deadLine).format('llll')}
+                    right={props =><List.Icon {...props} icon="event" />}
+                />
+            </TouchableRipple>
           
           }
         />

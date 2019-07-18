@@ -1,12 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacityBase } from 'react-native';
+import { StyleSheet } from 'react-native';
 import TodoInput from './InputBar';
 import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Provider as PaperProvider, Snackbar } from 'react-native-paper';
 import AppBar from './AppBar'
 import Todolist from './Todolist'
-
 import API from '../api'
 
 

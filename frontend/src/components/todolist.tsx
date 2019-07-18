@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-
+import { FlatList, StyleSheet, View, TouchableOpacity} from 'react-native';
 import { List, TouchableRipple, Divider } from 'react-native-paper';
-
 import Edit from './DialogNewEdit'
-import moment from 'moment'
+
 export default class FlatListBasics extends Component {
     constructor(props) {
         super(props);
