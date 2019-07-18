@@ -5,7 +5,7 @@ import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Provider as PaperProvider, Snackbar } from 'react-native-paper';
 import AppBar from './AppBar'
-import Todoslist from './Todolist'
+import Todolist from './Todolist'
 
 import API from '../api'
 
@@ -117,7 +117,7 @@ export default class Todo extends React.Component {
                 <TodoInput label="To Do" placeholder="Enter new To Do" handler={this.handler} />
                 <LinearGradient style={styles.container} colors={['#4c669f', '#3b5998', '#192f6a']}>
 
-                <Todoslist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} delete={this.deleteHandler}  edit={this.editHandler}/>
+                <Todolist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} delete={this.deleteHandler}  edit={this.editHandler}/>
                 
                 </LinearGradient>
                 <Snackbar

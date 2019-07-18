@@ -1,9 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-
-
-import TodoInput from './InputBar';
-
 import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import AppBar from './AppBar'
@@ -53,7 +49,7 @@ export default class Task extends React.Component {
         API.delete('task/delete/'+item_id)
             .then(res => {
                 
-                this.setState(state => ({ _SnackbarVisible: !state._SnackbarVisible, message: 'Deleted successfully' }), this.onRefresh())
+                this.setState(state => ({ _SnackbarVisible: !state._SnackbarVisible, message: 'Deleted successfully' }), this._onRefresh())
             })
         
     }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+ import React, { Component } from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 import { List, TouchableRipple, Divider } from 'react-native-paper';

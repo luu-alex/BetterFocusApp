@@ -172,9 +172,7 @@ module.exports = function(app, db, models, mongoose) {
                 );
                 return response.status(500).send(error);
             }
-	    console.log(user);
             // user.todos.pop(request.params.id);
-	    console.log(user);
             const _id = new ObjectID(request.params.id);
             var result = await TodoModel.remove({ _id: _id }, (err, res) => {
 	        if(err) { console.log(err) } else { console.log(res)}
@@ -183,7 +181,6 @@ module.exports = function(app, db, models, mongoose) {
  		{ _id: new ObjectID(user._id) },
   	        { $pull: { todos: { _id: _id  } } }
 	    , (err) => { if(err){ console.log(err)}});
-            // console.log(result);
 	    response.send(result);
         } catch (error) {
             console.log(error)
@@ -265,18 +262,30 @@ module.exports = function(app, db, models, mongoose) {
     // Need to add authentication
     app.delete(urlPrefix + "task/delete/:id", async (request, response) => { // tested with POSTMAN complete.
         try {
-            var task = await TaskModel.findById(request.params.id).exec();
-            var user = await UserModel.findOne({_id: task.user});
+            const task = await TaskModel.findById(request.params.id).exec();
+            if (!task) {
+                const error = new this.errs.NotFoundError(
+                    `task with id - ${request.params.id} does not exists`
+                );
+                return response.status(500).send(error);
+            }
+            let user = await UserModel.findOne(task.user);
             if (!user) {
                 const error = new this.errs.NotFoundError(
                     `User with username - ${username} does not exists`
                 );
                 return response.status(500).send(error);
             }
-            user.tasks.pop(request.params.id);
-            var result = await TaskModel.deleteOne({ _id: request.params.id }).exec();
-            await user.save();
-            response.send(result);
+            // user.todos.pop(request.params.id);
+            const _id = new ObjectID(request.params.id);
+            var result = await TodoModel.remove({ _id: _id }, (err, res) => {
+	        if(err) { console.log(err) } else { console.log(res)}
+            })
+            await UserModel.updateOne(
+ 		{ _id: new ObjectID(user._id) },
+  	        { $pull: { tasks: { _id: _id  } } }
+	    , (err) => { if(err){ console.log(err)}});
+	    response.send(result);
         } catch (error) {
             response.status(500).send(error);
         }
