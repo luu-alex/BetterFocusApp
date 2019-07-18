@@ -121,7 +121,7 @@ module.exports = function(app, db, models, mongoose) {
             var todo = new TodoModel(request.body);
             // task.user = request.params.username; // need to fix add users id once auth is added
             var username = request.body.username;
-            console.log(request.body.deadLine)
+            // console.log(request.body.deadLine)
             var user = await UserModel.findOne({username});
             if (!user) {
                 const error = new this.errs.NotFoundError(

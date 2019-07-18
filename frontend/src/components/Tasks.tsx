@@ -8,11 +8,44 @@ import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import AppBar from './AppBar'
 
+import API from '../api'
+
 import {
     Provider as PaperProvider,
+    FAB
   } from 'react-native-paper';
 
 export default class Todo extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { data: [
+          ],
+          isFetching: false,
+          visible: false,
+          visible1: false,
+          message:''
+        };
+    }
+
+    inputHandler = (text) => {
+        let data = {
+            task: text,
+            username: "alir128",
+            deadLine: "2019-07-21T02:01:00.000Z"
+        }
+
+        return API.post('addTask', data)
+                 .then(res => {
+                    // console.log(res.data)
+                    this.setState(state => {
+                        const data= [...state.data, res.data];
+                        return {
+                            data
+                        };
+                    });
+                 })
+      };
+
     static navigationOptions = {
         tabBarIcon: tabBarIcon('md-calendar'),
       };
@@ -24,9 +57,27 @@ export default class Todo extends React.Component {
             // <LinearGradient style={styles.container} colors={colors}>
             <PaperProvider>
                 <AppBar title="Tasks" />
-                <TodoInput label="Task" placeholder="Enter new Task"/>
+                {/* <TodoInput label="Task" placeholder="Enter new Task" handler={this.inputHandler} /> */}
                 <LinearGradient style={styles.container} colors={['#4c669f', '#3b5998', '#192f6a']}>
-                    <Text style={styles.text}>Tasks</Text>
+                    <FAB
+                        style={styles.fab}
+                        icon="add"
+                        onPress={() => console.log('Pressed')}
+                        // color="white"
+                    />
+                    {/* <Snackbar
+                    visible={this.state.visible}
+                    onDismiss={() => this.setState({ visible: false, message: '' })}
+                    action={{
+                        label: 'Dismiss',
+                        onPress: () => {
+                            this.setState({ visible: false, message: '' })
+                        },
+                    }}
+                    duration={Snackbar.DURATION_SHORT}
+                    >
+                    {this.state.message}
+                </Snackbar> */}
                 </LinearGradient>
                 
             </PaperProvider>
@@ -50,4 +101,11 @@ export default class Todo extends React.Component {
       fontWeight: 'bold',
       color: 'white',
     },
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        bottom: 0,
+        backgroundColor: '#fff'
+      },
   });

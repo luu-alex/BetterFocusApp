@@ -21,7 +21,7 @@ const simpleStyledConfig = {
 
 const shiftingConfig = {
     tabBarPosition: 'bottom',
-    initialRouteName: 'todo',
+    initialRouteName: 'tasks',
     shifting: true,
     labeled: false,
     activeColor: '#f0edf6',

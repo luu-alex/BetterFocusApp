@@ -7,12 +7,7 @@ const toDoModel = new Schema({
         type: Boolean,
         default: false
     },
-    user: { type: mongoose.Schema.ObjectId, ref: 'User' },
-    deadLine: {
-        type: Date,
-        min: Date.now,
-        max: '2099-12-31'
-    }
+    user: { type: mongoose.Schema.ObjectId, ref: 'User' }
 });
 
 var ToDo = mongoose.model('Todo', toDoModel);

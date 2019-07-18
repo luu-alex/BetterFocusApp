@@ -34,7 +34,7 @@ export default class FlatListBasics extends Component {
             <List.Item
                 left={props => <List.Icon {...props} icon="event" />}
                 title={item.todo}
-                description={moment(item.deadLine).format('llll')}
+                // description={moment(item.deadLine).format('llll')}
                 right={props => <TouchableOpacity onPress={() => this.props.delete(item._id)}>
                 <List.Icon  {...props} icon="cancel" />
             </TouchableOpacity>}

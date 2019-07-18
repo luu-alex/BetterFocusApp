@@ -7,6 +7,11 @@ const taskModel =  new Schema({
     isItDone: {
         type: Boolean,
         default: false
+    },
+    deadLine: {
+        type: Date,
+        min: Date.now,
+        max: '2099-12-31'
     }
 });
 
