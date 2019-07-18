@@ -9,6 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import AppBar from './AppBar'
 import Tasklist from './Tasklist'
 import API from '../api'
+import NewTask from './DialogNewEdit'
 
 import {
     Provider as PaperProvider,
@@ -22,17 +23,17 @@ export default class Task extends React.Component {
         this.state = { data: [
           ],
           isFetching: false,
-          visible: false,
-          visible1: false,
-          message:''
+          _SnackbarVisible: false,
+          message:'',
+          NewDialogVisible: false
         };
     }
 
-    inputHandler = (text) => {
+    _NewTaskHandler = (id, task) => {
         let data = {
-            task: text,
+            task: task.text,
             username: "alir128",
-            deadLine: "2019-07-21T02:01:00.000Z"
+            deadLine: task.date
         }
 
         return API.post('addTask', data)
@@ -47,12 +48,37 @@ export default class Task extends React.Component {
                 })
     };
 
+    _deleteHandler = (item_id) => {
+        console.log(item_id)
+        API.delete('task/delete/'+item_id)
+            .then(res => {
+                
+                this.setState(state => ({ _SnackbarVisible: !state._SnackbarVisible, message: 'Deleted successfully' }), this.onRefresh())
+            })
+        
+    }
+
+    _editHandler = (item_id, task) => {
+        let data = {
+            task: task.text,
+            username: "alir128",
+            deadLine: task.date
+        }
+        return API.put('task/edit/'+item_id, data)
+                 .then(res => {
+                    // console.log(res.data)
+                    this._onRefresh();
+                    this.setState(state => ({ _SnackbarVisible: !state._SnackbarVisible, message: 'Edited successfully' }))
+                 })
+
+    }
+
     componentDidMount() {
         API.get(`task/all/alir128`)
           .then(res => {
-            const notCompleteTodos = res.data;
-            const newData = notCompleteTodos
-                .filter(todo => !todo.isItDone);
+            const notCompleteTasks = res.data;
+            const newData = notCompleteTasks
+                .filter(task => !task.isItDone);
                 // .map(notcomp => ({ key: notcomp.todo}));
             this.setState(state => {
                 return{
@@ -61,36 +87,57 @@ export default class Task extends React.Component {
                 }
             })
           })
-      }
+    }
+
+    _onRefresh = () => {
+        this.setState({ isFetching: true }, () => { this.refreshTasks() });
+     }
+
+    refreshTasks = () => {   
+        API.get(`task/all/alir128`)
+        .then(res => {
+          
+          const notCompleteTask = res.data;
+          const newData = notCompleteTask
+              .filter(task => !task.isItDone);
+            //   .map(notcomp => ({ key: notcomp.todo}));
+            console.log(newData);
+          this.setState(state => {
+              return{
+                  data: newData,
+                  isFetching: false
+              }
+          })
+        })
+
+    }
 
     static navigationOptions = {
         tabBarIcon: tabBarIcon('md-calendar'),
       };
+      _closeNewDialog = () => {this.setState({NewDialogVisible:false})}
     render() {
         const { navigate } = this.props.navigation;
         return (
-          
-            
-            // <LinearGradient style={styles.container} colors={colors}>
             <PaperProvider>
                 <AppBar title="Tasks" />
-                {/* <TodoInput label="Task" placeholder="Enter new Task" handler={this.inputHandler} /> */}
                 <LinearGradient style={styles.container} colors={['#4c669f', '#3b5998', '#192f6a']}>
-                    <FAB
+                    <Tasklist data={this.state.data}  onRefresh={this._onRefresh} isFetch={this.state.isFetching} delete={this._deleteHandler}  edit={this._editHandler}/>
+                </LinearGradient>
+                <FAB
                         style={styles.fab}
                         icon="add"
-                        onPress={() => console.log('Pressed')}
+                        onPress={() => this.setState({ NewDialogVisible: true})}
                         // color="white"
                     />
-                    <Tasklist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} delete={this.deleteHandler}  edit={this.editHandler}/>
-                </LinearGradient>
+                <NewTask dateAvailable={true} title="New" inputMessage="Task Description" visible={this.state.NewDialogVisible} close={this._closeNewDialog} handler={this._NewTaskHandler}/>
                 <Snackbar
-                    visible={this.state.visible}
-                    onDismiss={() => this.setState({ visible: false, message: '' })}
+                    visible={this.state._SnackbarVisible}
+                    onDismiss={() => this.setState({ _SnackbarVisible: false, message: '' })}
                     action={{
                         label: 'Dismiss',
                         onPress: () => {
-                            this.setState({ visible: false, message: '' })
+                            this.setState({ _SnackbarVisible: false, message: '' })
                         },
                     }}
                     duration={Snackbar.DURATION_SHORT}
@@ -104,8 +151,8 @@ export default class Task extends React.Component {
 
   const styles = StyleSheet.create({
     container: {
-      justifyContent: 'center',
-      alignItems: 'center',
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
       flex: 1,
       padding: 8,
     },

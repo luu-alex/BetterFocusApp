@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native'
 
 import { List, TouchableRipple, Divider } from 'react-native-paper';
 
-import Edit from './EditTodo'
+import Edit from './DialogNewEdit'
 import moment from 'moment'
 export default class FlatListBasics extends Component {
     constructor(props) {
@@ -45,7 +45,7 @@ export default class FlatListBasics extends Component {
           
           }
         />
-        <Edit visible={this.state.visible} close={this._closeEditDialog} item={this.state.pressedItem} handler={this._handler}/>
+        <Edit title="Edit" inputMessage="Reminder" visible={this.state.visible} close={this._closeEditDialog} item={this.state.pressedItem} handler={this._handler}/>
       </View>
     );
   }

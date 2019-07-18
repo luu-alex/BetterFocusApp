@@ -47,27 +47,31 @@ class DatePicker extends Component {
   };
 
   render() {
-    const { date, open } = this.state;
+    const { date, open} = this.state;
     const value = date ? date.toLocaleString() : '';
-    return (
-      <View style={{ flex: 1, justifyContent:'center' , backgroundColor: '#fff'}}>
-        <TextInput
-          label='Completion date'
-          ref={this._textInput}
-          render={this.renderTouchText}
-          value={value}
-          style={styles.inputContainerStyle}
-          
-        />
-        <DateTimePicker
-          mode={"datetime"}
-          date={new Date(this.props.dateGiven)}
-          isVisible={open}
-          onConfirm={this.handleChange}
-          onCancel={this.handleClose}
-        />
-      </View>
-    );
+    let datePicker = <View style={{ flex: 1, justifyContent:'center' , backgroundColor: '#fff'}}>
+    <TextInput
+      label='Completion date'
+      ref={this._textInput}
+      render={this.renderTouchText}
+      value={value}
+      style={styles.inputContainerStyle}
+      
+    />
+    <DateTimePicker
+      mode={"datetime"}
+      date={this.props.dateGiven ? new Date(this.props.dateGiven) : new Date()}
+      isVisible={open}
+      onConfirm={this.handleChange}
+      onCancel={this.handleClose}
+    />
+  </View>;
+    if(this.props.dateAvailable){
+        return (datePicker);
+    } else {
+        return (<View></View>)
+    }
+   
   }
 }
 const styles = StyleSheet.create({

@@ -8,18 +8,19 @@ import { TextInput } from 'react-native-paper';
 import DateTime from './DatePicker'
 import { ThemeConsumer } from 'react-native-elements';
 
-export default class EditTodo extends React.Component {
+export default class DialogNewEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
           text: '',
-          date: ''
+          date: '',
+          title: ''
         }
       }
 
       componentDidUpdate(prevProps) {
         if (this.props.visible === true && prevProps.visible === false) {
-            this.setState({text: this.props.item.todo, date: this.props.item.deadLine})
+            this.setState({text: this.props.item ? (this.props.item.todo ? this.props.item.todo: this.props.item.task) : '', date: this.props.item ? this.props.item.deadLine : '', title: this.props.title, inputMessage: this.props.inputMessage})
         }
     }
 
@@ -29,7 +30,7 @@ export default class EditTodo extends React.Component {
 
       onAddItem = () => {
         // this.props.handler(this.state.text);
-        this.props.handler(this.props.item._id,this.state);
+        this.props.handler(this.props.item ? this.props.item._id: '',this.state);
         this.setState(state => {
           return {
             text: '',
@@ -41,18 +42,18 @@ export default class EditTodo extends React.Component {
         return (
             <Portal>
                 <Dialog onDismiss={this.props.close} visible={this.props.visible}>
-                <Dialog.Title>Alert</Dialog.Title>
+                <Dialog.Title>{this.state.title}</Dialog.Title>
                 <Dialog.ScrollArea style={{ maxHeight: 220, paddingHorizontal: 0 }}>
                     <ScrollView contentContainerStyle={{ paddingHorizontal: 24 }}>
                     <TextInput 
                         mode="Flat input"
                         style={styles.inputContainerStyle}
-                        label={"Edit To do"}
+                        label={this.state.inputMessage}
                         value={this.state.text}
                         onChangeText={text => this.setState({ text })}
                         onSubmitEditing={this.onAddItem}
                     />
-                    <DateTime dateHandler={this.dateHandler} dateGiven={this.state.date} />
+                    <DateTime dateAvailable={this.state.inputMessage=="Reminder" ? false: true} dateHandler={this.dateHandler} dateGiven={this.state.date} />
                     </ScrollView>
                 </Dialog.ScrollArea>
                 <Dialog.Actions>
