@@ -5,7 +5,7 @@ import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Provider as PaperProvider, Snackbar } from 'react-native-paper';
 import AppBar from './AppBar'
-import Todoslist from './todolist'
+import Todoslist from './Todolist'
 
 import API from '../api'
 
@@ -26,7 +26,7 @@ export default class Todo extends React.Component {
         let data = {
             todo: text,
             username: "alir128",
-            deadLine: "2019-07-21T02:01:00.000Z"
+            // deadLine: "2019-07-21T02:01:00.000Z"
         }
 
         return API.post('addTodo', data)
@@ -58,10 +58,11 @@ export default class Todo extends React.Component {
       }
 
     deleteHandler = (item_id) => {
+        console.log(item_id)
         API.delete('todo/delete/'+item_id)
             .then(res => {
-                this.onRefresh();
-                this.setState(state => ({ visible: !state.visible, message: 'Deleted successfully' }))
+                
+                this.setState(state => ({ visible: !state.visible, message: 'Deleted successfully' }), this.onRefresh())
             })
         
     }
@@ -112,7 +113,7 @@ export default class Todo extends React.Component {
 
         return (
             <PaperProvider>
-                <AppBar title="Reminders" />
+                <AppBar title="Daily Reminders" />
                 <TodoInput label="To Do" placeholder="Enter new To Do" handler={this.handler} />
                 <LinearGradient style={styles.container} colors={['#4c669f', '#3b5998', '#192f6a']}>
 

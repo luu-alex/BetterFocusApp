@@ -14,7 +14,7 @@ export default class FlatListBasics extends Component {
         };
       }
     _keyExtractor = (item, index) => item._id;
-    _handler = (item_id, todo) => {this.props.edit(item_id, todo) && this.setState({visible:false, pressedItem:{}})};
+    _handler = (item_id, task) => {this.props.edit(item_id, task) && this.setState({visible:false, pressedItem:{}})};
     _closeEditDialog = () => {this.setState({visible:false, pressedItem: {}})}
   render() { 
     return (
@@ -33,19 +33,17 @@ export default class FlatListBasics extends Component {
             >
             <List.Item
                 left={props => <List.Icon {...props} icon="event" />}
-                title={item.todo}
-                // description={moment(item.deadLine).format('llll')}
+                title={item.task}
+                description={moment(item.deadLine).format('llll')}
                 right={props => <TouchableOpacity onPress={() => this.props.delete(item._id)}>
                 <List.Icon  {...props} icon="cancel" />
             </TouchableOpacity>}
             />
-            
-
           </TouchableRipple>
           
           }
         />
-        <Edit title="Edit" inputMessage="Reminder" visible={this.state.visible} close={this._closeEditDialog} item={this.state.pressedItem} handler={this._handler}/>
+        <Edit title="Edit" inputMessage="Task" visible={this.state.visible} close={this._closeEditDialog} item={this.state.pressedItem} handler={this._handler}/>
       </View>
     );
   }
