@@ -7,7 +7,7 @@ import TodoInput from './InputBar';
 import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import AppBar from './AppBar'
-import Todoslist from './Todolist'
+import Tasklist from './Tasklist'
 import API from '../api'
 
 import {
@@ -16,7 +16,7 @@ import {
     Snackbar
   } from 'react-native-paper';
 
-export default class Todo extends React.Component {
+export default class Task extends React.Component {
     constructor(props) {
         super(props);
         this.state = { data: [
@@ -36,7 +36,7 @@ export default class Todo extends React.Component {
         }
 
         return API.post('addTask', data)
-                 .then(res => {
+                .then(res => {
                     // console.log(res.data)
                     this.setState(state => {
                         const data= [...state.data, res.data];
@@ -44,8 +44,24 @@ export default class Todo extends React.Component {
                             data
                         };
                     });
-                 })
-      };
+                })
+    };
+
+    componentDidMount() {
+        API.get(`task/all/alir128`)
+          .then(res => {
+            const notCompleteTodos = res.data;
+            const newData = notCompleteTodos
+                .filter(todo => !todo.isItDone);
+                // .map(notcomp => ({ key: notcomp.todo}));
+            this.setState(state => {
+                return{
+                    data: newData,
+                    isFetching: false
+                }
+            })
+          })
+      }
 
     static navigationOptions = {
         tabBarIcon: tabBarIcon('md-calendar'),
@@ -66,7 +82,7 @@ export default class Todo extends React.Component {
                         onPress={() => console.log('Pressed')}
                         // color="white"
                     />
-                    <Todoslist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} delete={this.deleteHandler}  edit={this.editHandler}/>
+                    <Tasklist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} delete={this.deleteHandler}  edit={this.editHandler}/>
                 </LinearGradient>
                 <Snackbar
                     visible={this.state.visible}
