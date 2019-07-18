@@ -7,12 +7,13 @@ import TodoInput from './InputBar';
 import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import AppBar from './AppBar'
-
+import Todoslist from './Todolist'
 import API from '../api'
 
 import {
     Provider as PaperProvider,
-    FAB
+    FAB,
+    Snackbar
   } from 'react-native-paper';
 
 export default class Todo extends React.Component {
@@ -65,7 +66,9 @@ export default class Todo extends React.Component {
                         onPress={() => console.log('Pressed')}
                         // color="white"
                     />
-                    {/* <Snackbar
+                    <Todoslist data={this.state.data}  onRefresh={this.onRefresh} isFetch={this.state.isFetching} delete={this.deleteHandler}  edit={this.editHandler}/>
+                </LinearGradient>
+                <Snackbar
                     visible={this.state.visible}
                     onDismiss={() => this.setState({ visible: false, message: '' })}
                     action={{
@@ -77,13 +80,8 @@ export default class Todo extends React.Component {
                     duration={Snackbar.DURATION_SHORT}
                     >
                     {this.state.message}
-                </Snackbar> */}
-                </LinearGradient>
-                
-            </PaperProvider>
-            
-            // </LinearGradient>
-        
+                </Snackbar>
+            </PaperProvider>        
       );
     }
   }
