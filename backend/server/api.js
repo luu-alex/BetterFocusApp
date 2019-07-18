@@ -278,7 +278,7 @@ module.exports = function(app, db, models, mongoose) {
             }
             // user.todos.pop(request.params.id);
             const _id = new ObjectID(request.params.id);
-            var result = await TodoModel.remove({ _id: _id }, (err, res) => {
+            var result = await TaskModel.remove({ _id: _id }, (err, res) => {
 	        if(err) { console.log(err) } else { console.log(res)}
             })
             await UserModel.updateOne(
