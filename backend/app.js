@@ -12,7 +12,16 @@ const port = 3000;
 
 var db = mongoose.connect("mongodb+srv://project:summercollab@cluster0-6bcse.mongodb.net/SummerProject");
 
+crypto = require('crypto'); //used for password hashing
+jwt = require('jsonwebtoken');
+secret = "secretlol";
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+    next();
+});
 
 
 
@@ -33,6 +42,6 @@ app.get('/index', (req, res) =>
         res.send('index.html')
     );
 
-app.listen(3000, '0.0.0.0', () => {
-    console.log('listening on ${port}!')
+app.listen(port, '0.0.0.0', () => {
+    console.log(`listening on ${port}!`)
 })

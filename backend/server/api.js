@@ -22,32 +22,70 @@ module.exports = function(app, db, models, mongoose) {
         }
     });
 
+    app.post(urlPrefix + "login", async (request, response) => {
+        var bodyCount = Object.keys(request.body).length;
+        var username = request.body.username;
+        var password = request.body.password;
+        var result = {};
+        if (bodyCount != 2 || typeof username == "undefined" || typeof password == "undefined") {
+            response.status(400); 
+            result["error"] = "Bad POST request parameters.";
+            response.json(result); //immediately respond with error code.
+        } else {
+            var hashedPassword = crypto.createHash("md5").update(username+password).digest("hex");
+            const user = await UserModel.findOne({'username': username, 'password': hashedPassword});
+            if (!user) {
+                response.status(404);
+                result = {status:404, "error": "Username or password incorrect"};
+            } else {
+                result["username"] = user.username;
+                var token = jwt.sign({id: user.username}, secret, {expiresIn: 3600});
+                result["token"] = token;
+                response.status(200); 
+            }
+            response.json(result);
+            
+        }
+    })
+
     //                                      User RESTFUL routes
     // ------------------------------------------------------------------------------------------------------------------
 
     // add new user
     // authenticate user and take them inside the app
     app.post(urlPrefix + "addUser", async (request, response) => { //tested already
+        var username = request.body.username;
+        var password = request.body.password;
+        var result = {};
         try {
-            const user = await UserModel.findOne({'username': request.body.username});
-            if (user) {
+            if (Object.keys(request.body).length < 2 || typeof username == "undefined" || typeof password == "undefined") {
                 response.status(404);
-                response.json({status:404, "message": "User with username already exists"});
+                response.json({status:404, "error": "Bad data sent."});
                 return
             }
-            let newuser = UserModel(request.body);
+            const user = await UserModel.findOne({'username': username});
+            if (user) {
+                response.status(404);
+                response.json({status:404, "erro": "User with username already exists"});
+                return
+            }
+            var hashedPassword = crypto.createHash("md5").update(username+password).digest("hex");
+            let newuser = UserModel({username: username, password: hashedPassword});
             var result = await newuser.save();
-            response.send(result);
+            response.json(result)
+            
         } catch (error) {
             console.log(error)
-            response.status(500).send(error);
+            response.status(500).json(error)
         }
     });
 
     // used to query one used by username.
     // Need to add authentication
     app.get(urlPrefix + "user/:username", async (request, response) => { //eventually return users personal profile //tested already
-        try {
+        jwt.verify(request.headers['x-access-token'], secret, async function(err, decoded) {
+            if (err) return response.status(500).json({ auth: false, message: 'Failed to authenticate token.' })
+            if (request.params.username != decoded.id) res.status(400).json({auth: false, message: "Bad request made. Token doesn't belong to user."})
             const user = await UserModel.findOne({'username': request.params.username});
             if (!user) {
                 response.status(404);
@@ -55,10 +93,7 @@ module.exports = function(app, db, models, mongoose) {
                 return
             }
             response.send(user);
-            
-        } catch (error) {
-            response.status(500).send(error);
-        }
+        })
     });
     
     // edit user profile. 
