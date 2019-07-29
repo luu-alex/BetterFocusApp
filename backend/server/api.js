@@ -21,10 +21,10 @@ module.exports = function(app, db, models, mongoose) {
     //         response.status(500).send(error);
     //     }
     // });
-    app.get(urlPrefix+"login", (res, res) => {
+    app.get(urlPrefix+"login", (req, res) => {
         res.send('login.html')
     })
-    
+
     app.post(urlPrefix + "login", async (request, response) => {
         var bodyCount = Object.keys(request.body).length;
         var username = request.body.username;
