@@ -145,7 +145,7 @@ module.exports = function(app, db, models, mongoose) {
                 }
                 var result = await TodoModel.find({'_id' :{ $in: user.todos}});
                 response.send(result);
-            } catch {
+            } catch (error) {
                 response.status(500).send(error);
             }
         })
@@ -273,7 +273,7 @@ module.exports = function(app, db, models, mongoose) {
                 }
                 var result = await TaskModel.find({'_id' :{ $in: user.tasks}});
                 response.send(result);
-            } catch {
+            } catch (error) {
                 response.status(500).send(error);
             }
         })
