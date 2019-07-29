@@ -9,19 +9,22 @@ module.exports = function(app, db, models, mongoose) {
     
     //example get request
     app.get(urlPrefix + '/', (req, res) =>
-        res.send('Hello World!')
+        res.send('login.html')
     );
     // returns all users in db
     // Need to add authentication
-    app.get(urlPrefix + "users", async (request, response) => { // should return maybe only usernames in future to add as connections....
-        try {
-            var result = await  UserModel.find().exec();
-            response.send(result);
-        } catch (error) {
-            response.status(500).send(error);
-        }
-    });
-
+    // app.get(urlPrefix + "users", async (request, response) => { // should return maybe only usernames in future to add as connections....
+    //     try {
+    //         var result = await  UserModel.find().exec();
+    //         response.send(result);
+    //     } catch (error) {
+    //         response.status(500).send(error);
+    //     }
+    // });
+    app.get(urlPrefix+"login", (res, res) => {
+        res.send('login.html')
+    })
+    
     app.post(urlPrefix + "login", async (request, response) => {
         var bodyCount = Object.keys(request.body).length;
         var username = request.body.username;
