@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, AsyncStorage } from 'react-native';
 import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
 import AppBar from './AppBar'
@@ -25,10 +25,10 @@ export default class Task extends React.Component {
         };
     }
 
-    _NewTaskHandler = (id, task) => {
+    _NewTaskHandler = async (id, task) => {
         let data = {
             task: task.text,
-            username: "alir128",
+            username: await AsyncStorage.getItem('username'),
             deadLine: task.date
         }
 
@@ -54,10 +54,10 @@ export default class Task extends React.Component {
         
     }
 
-    _editHandler = (item_id, task) => {
+    _editHandler = async (item_id, task) => {
         let data = {
             task: task.text,
-            username: "alir128",
+            username: await AsyncStorage.getItem('username'),
             deadLine: task.date
         }
         return API.put('task/edit/'+item_id, data)
@@ -68,8 +68,9 @@ export default class Task extends React.Component {
 
     }
 
-    componentDidMount() {
-        API.get(`task/all/alir128`)
+    async componentDidMount() {
+        const user = await AsyncStorage.getItem('username');
+        API.get(`task/all/`+user)
           .then(res => {
             const notCompleteTasks = res.data;
             const newData = notCompleteTasks
@@ -87,8 +88,9 @@ export default class Task extends React.Component {
         this.setState({ isFetching: true }, () => { this.refreshTasks() });
      }
 
-    refreshTasks = () => {   
-        API.get(`task/all/alir128`)
+    refreshTasks = async () => {
+        const user = await AsyncStorage.getItem('username');   
+        API.get(`task/all/`+user)
         .then(res => {
           
           const notCompleteTask = res.data;

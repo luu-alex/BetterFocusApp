@@ -1,10 +1,7 @@
 import React from 'react';
-import { TabNavigator } from 'react-navigation';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button, AsyncStorage } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import {
-    Provider as PaperProvider,
-  } from 'react-native-paper';
+
 
 import tabBarIcon from './tabBarIcon';
 
@@ -21,10 +18,15 @@ const createScreen = ({ icon, colors, title }) => {
             <LinearGradient style={styles.container} colors={colors}>
             
             <Text style={styles.text}>{title}</Text>
+            <Button title="Actually, sign me out :)" onPress={this._signOutAsync} />
             </LinearGradient>
         
       );
     }
+    _signOutAsync = async () => {
+        await AsyncStorage.clear();
+        this.props.navigation.navigate('Auth');
+      };
   };
 };
 

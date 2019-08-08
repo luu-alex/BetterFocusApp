@@ -1,10 +1,27 @@
 import React from 'react';
-import { createAppContainer } from 'react-navigation';
+import { createStackNavigator, createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { View, SafeAreaView } from 'react-native';
-import Navigator from './src/navigator';
+import AppNav from './src/navigator';
+import AuthLoadingScreen from './src/AuthLoadingScreen'
+import SignInScreen from './src/components/SignInScreen';
+import RegisterScreen from './src/components/RegisterScreen'
 
 
-const App = createAppContainer(Navigator);
+const AuthStack = createStackNavigator({ SignIn: {screen: SignInScreen, navigationOptions: {
+    header: null,
+  }}, Register: {screen: RegisterScreen, navigationOptions: {
+    header: null,
+  }} });
+const App = createAppContainer(createSwitchNavigator(
+    {
+        AuthLoading: AuthLoadingScreen,
+        AppStack: AppNav,
+        Auth: AuthStack,
+    },
+    {
+      initialRouteName: 'AuthLoading',
+    }
+));
 
 
 export default () => (

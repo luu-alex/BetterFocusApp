@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, AsyncStorage } from 'react-native';
 import TodoInput from './InputBar';
 import tabBarIcon from '../tabBarIcon';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -20,11 +20,11 @@ export default class Todo extends React.Component {
           message:''
         };
       }
-
-      handler = (text) => {
+      
+      handler = async (text) => {
         let data = {
             todo: text,
-            username: "alir128",
+            username: await AsyncStorage.getItem('username'),
             // deadLine: "2019-07-21T02:01:00.000Z"
         }
 
@@ -40,8 +40,9 @@ export default class Todo extends React.Component {
                  })
       };
 
-      componentDidMount() {
-        API.get(`todo/all/alir128`)
+      async componentDidMount() {
+        const user = await AsyncStorage.getItem('username')
+        API.get(`todo/all/`+user)
           .then(res => {
             const notCompleteTodos = res.data;
             const newData = notCompleteTodos
@@ -66,10 +67,10 @@ export default class Todo extends React.Component {
         
     }
 
-    editHandler = (item_id, todo) => {
+    editHandler = async (item_id, todo) => {
         let data = {
             todo: todo.text,
-            username: "alir128",
+            username: await AsyncStorage.getItem('username'),
             deadLine: todo.date
         }
         // console.log(text)
@@ -87,8 +88,9 @@ export default class Todo extends React.Component {
         this.setState({ isFetching: true }, () => { this.refreshTodos() });
      }
 
-     refreshTodos = () => {   
-        API.get(`todo/all/alir128`)
+     refreshTodos = async () => {
+        const user = await AsyncStorage.getItem('username');   
+        API.get(`todo/all/`+user)
         .then(res => {
           const notCompleteTodos = res.data;
           const newData = notCompleteTodos
