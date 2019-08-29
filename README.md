@@ -1,8 +1,9 @@
 # Summer Project Collab
 
 ## OUR IDEA
-## Idea: productivity(?)
-### Description: Has a timer functionality, trello board, scheduling/day planning, follows pomodoro technique
+## Idea: productivity
+### Description: This app will help students build better studying habits with its own built in timer that wont let you use any other apps until the timer is finished!
+### It will have a timer functionality following the pomodoro technique, possibly a trello board, scheduling/day planning, 
 
 ### Features: 
 habits for users, goals, charts, useful and fun information, reminders, Friend functionality(?), permission acceptance, we’ll have a shop page that people can buy with our digital currency,Set up reminders
