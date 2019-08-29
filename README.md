@@ -27,3 +27,4 @@ Tasks -> USERID, day, isItDone
 TODO->USERID, isItDone
 stats->TasksCompleted, toDosDone, github progression, calender, habits
 Store-> aesthetics, assets, points new accessories
+![Design of our app](https://github.com/luu-alex/BetterFocusApp/blob/master/design.png)
